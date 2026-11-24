@@ -37,7 +37,7 @@ public class RefreshTokenEntity {
     private TokenFamilyEntity family;
 
     @Column(name = "token_hash", nullable = false, length = 64)
-    private String token_hash;
+    private String tokenHash;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "replaced_by_id", unique = true)
