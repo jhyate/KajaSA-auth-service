@@ -1,0 +1,11 @@
+  _  __      _       ____    _
+ | |/ /__ _ (_) __ _/ ___|  / \
+ | ' // _` || |/ _` \___ \ / _ \
+ | . \ (_| || | (_| |___) / ___ \
+ |_|\_\__,_|/ |\__,_|____/_/   \_\
+          |__/
+
+       ${spring.application.name}
+          v${application.version}
+
+       Identity  Access  Security
