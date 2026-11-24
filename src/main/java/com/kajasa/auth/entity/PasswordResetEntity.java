@@ -17,6 +17,12 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Representa el proceso de recuperación de contraseña de un usuario.
+ * Almacena el hash del token de recuperación, el número de intentos permitidos
+ * y realizados, su estado y fecha de expiración.
+ * Cada usuario puede tener un único registro reutilizable.
+ */
 @Entity
 @Getter
 @Setter

@@ -18,6 +18,11 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Representa un refresh token perteneciente a una familia de tokens.
+ * Almacena únicamente el hash del token y mantiene la referencia al token
+ * que lo reemplazó, permitiendo implementar rotación y detección de reutilización.
+ */
 @Entity
 @Getter
 @Setter

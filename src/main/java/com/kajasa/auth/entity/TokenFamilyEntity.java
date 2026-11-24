@@ -17,6 +17,11 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Representa una familia de refresh tokens asociada a una sesión.
+ * Permite gestionar el ciclo de vida de los tokens, controlar su estado
+ * y revocar la familia cuando se detecta una posible reutilización indebida.
+ */
 @Entity
 @Getter
 @Setter

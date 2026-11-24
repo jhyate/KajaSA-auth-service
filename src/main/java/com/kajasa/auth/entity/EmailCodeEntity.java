@@ -17,6 +17,12 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Representa el código de verificación del correo electrónico de un usuario.
+ * Almacena el HMAC del código, el número de intentos permitidos y realizados,
+ * su estado y fecha de expiración.
+ * Cada usuario puede tener un único registro vigente reutilizable.
+ */
 @Entity
 @Getter
 @Setter

@@ -8,6 +8,11 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Representa el contador de solicitudes de una acción determinada para un usuario.
+ * Permite controlar los límites de solicitudes y reenvíos durante una ventana
+ * de tiempo, almacenando la cantidad de solicitudes y la fecha de la última petición.
+ */
 @Entity
 @Getter
 @Setter

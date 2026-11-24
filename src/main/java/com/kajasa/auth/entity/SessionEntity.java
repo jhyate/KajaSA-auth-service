@@ -17,6 +17,11 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Representa una sesión autenticada de un usuario en KajaSA.
+ * Almacena el hash de la credencial opaca de sesión, su estado
+ * y fecha de expiración, permitiendo gestionar y revocar sesiones.
+ */
 @Entity
 @Getter
 @Setter

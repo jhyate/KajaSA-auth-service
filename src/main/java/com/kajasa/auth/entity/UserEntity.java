@@ -14,6 +14,11 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Representa a un usuario registrado en KajaSA.
+ * Almacena su información de identificación, credenciales de acceso,
+ * estado de la cuenta y datos relacionados con la verificación del correo electrónico.
+ */
 @Entity
 @Getter
 @Setter
