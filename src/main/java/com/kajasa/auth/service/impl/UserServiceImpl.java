@@ -11,21 +11,41 @@ import com.kajasa.auth.repository.UserRepository;
 import com.kajasa.auth.service.UserService;
 import java.util.Locale;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Implementación del servicio encargado de gestionar los usuarios
+ * del sistema de autenticación de KajaSA.
+ *
+ * Contiene la lógica de negocio relacionada con el registro,
+ * consulta y actualización del estado de los usuarios.
+ */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
+    /**
+     * Registra un nuevo usuario en el sistema.
+     *
+     * Normaliza el correo electrónico, verifica que no esté registrado,
+     * codifica la contraseña y crea el usuario con estado
+     * PENDING_VERIFICATION.
+     *
+     * @param userCreateRequestDto DTO con los datos necesarios para registrar al usuario.
+     * @return DTO con la información del usuario registrado.
+     * @throws ConflictException si el correo electrónico ya está registrado.
+     */
     @Transactional
     @Override
     public UserResponseDto registerUser(UserCreateRequestDto userCreateRequestDto) {
@@ -33,10 +53,7 @@ public class UserServiceImpl implements UserService {
         log.info("Registering user with email: {}", userCreateRequestDto.getEmail());
 
         // normalizacion del correo electrónico
-        String normalizedEmail = userCreateRequestDto
-                .getEmail()
-                .strip()
-                .toLowerCase(Locale.ROOT);
+        String normalizedEmail = normalizeEmail(userCreateRequestDto.getEmail());
 
         log.debug("Normalized email: {}", normalizedEmail);
 
@@ -66,6 +83,13 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+    /**
+     * Obtiene la información de un usuario mediante su identificador.
+     *
+     * @param userId identificador único del usuario.
+     * @return DTO con la información del usuario encontrado.
+     * @throws ResourceNotFoundException si no existe un usuario con el identificador proporcionado.
+     */
     @Override
     public UserResponseDto getUserById(UUID userId) {
 
@@ -78,24 +102,50 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponse(user);
     }
 
+    /**
+     * Obtiene la información de un usuario mediante su correo electrónico.
+     *
+     * Normaliza el correo electrónico antes de realizar la consulta.
+     *
+     * @param email correo electrónico del usuario.
+     * @return DTO con la información del usuario encontrado.
+     * @throws ResourceNotFoundException si no existe un usuario con el correo proporcionado.
+     */
     @Override
     public UserResponseDto getUserByEmail(String email) {
 
         log.info("Fetching user by email: {}", email);
 
-        UserEntity user = userRepository.findByEmail(email)
+        String normalizedEmail = normalizeEmail(email);
+
+        UserEntity user = userRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() -> {
-                    log.warn("User not found by email: {}", email);
+                    log.warn("User not found by email: {}", normalizedEmail);
                     return new ResourceNotFoundException(
                             "No fue posible encontrar el registro solicitado."
                     );
                 });
 
-        log.debug("User found with email: {}", email);
+        log.debug("User found with email: {}", normalizedEmail);
 
         return userMapper.toResponse(user);
     }
 
+    /**
+     * Actualiza el estado de un usuario mediante su identificador.
+     *
+     * Valida que la transición entre el estado actual y el nuevo estado
+     * esté permitida antes de realizar la actualización.
+     *
+     * La activación de usuarios pendientes de verificación debe realizarse
+     * exclusivamente mediante el proceso de verificación del correo electrónico.
+     *
+     * @param userId identificador único del usuario.
+     * @param status nuevo estado que se desea asignar al usuario.
+     * @return DTO con la información actualizada del usuario.
+     * @throws ResourceNotFoundException si no existe un usuario con el identificador proporcionado.
+     * @throws ConflictException si la transición de estado no está permitida.
+     */
     @Transactional
     @Override
     public UserResponseDto updateStatusByUserId(UUID userId, UserStatus status) {
@@ -144,5 +194,11 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No fue posible encontrar el registro solicitado."
                 ));
+    }
+
+    private String normalizeEmail(String email) {
+        return email
+                .strip()
+                .toLowerCase(Locale.ROOT);
     }
 }
