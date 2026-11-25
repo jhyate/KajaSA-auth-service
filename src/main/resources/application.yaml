@@ -11,3 +11,14 @@ spring:
 
 application:
   version: "@project.version@"
+
+kajasa:
+  security:
+    password:
+      argon2:
+        algorithm: argon2id
+        memory: 19456
+        iterations: 2
+        parallelism: 1
+        salt-length: 16
+        hash-length: 32

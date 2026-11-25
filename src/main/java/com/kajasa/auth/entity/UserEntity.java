@@ -47,9 +47,6 @@ public class UserEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    protected UserEntity() {
-    }
-
     @PrePersist
     protected void onCreate() {
         Instant now = Instant.now();
