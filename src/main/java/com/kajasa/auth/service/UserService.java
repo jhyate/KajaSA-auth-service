@@ -2,6 +2,7 @@ package com.kajasa.auth.service;
 
 import com.kajasa.auth.dto.UserCreateRequestDto;
 import com.kajasa.auth.dto.UserResponseDto;
+import java.util.UUID;
 
 /**
  * Servicio encargado de gestionar los usuarios de KajaSA.
@@ -11,4 +12,9 @@ import com.kajasa.auth.dto.UserResponseDto;
 public interface UserService {
 
     UserResponseDto registerUser(UserCreateRequestDto userCreateRequestDto);
+
+    UserResponseDto getUserById(UUID userId);
+
+    UserResponseDto getUserByEmail(String email);
+
 }

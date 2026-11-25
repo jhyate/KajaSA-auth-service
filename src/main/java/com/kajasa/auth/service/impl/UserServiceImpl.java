@@ -5,10 +5,12 @@ import com.kajasa.auth.dto.UserResponseDto;
 import com.kajasa.auth.entity.UserEntity;
 import com.kajasa.auth.enums.UserStatus;
 import com.kajasa.auth.exception.ConflictException;
+import com.kajasa.auth.exception.ResourceNotFoundException;
 import com.kajasa.auth.mapper.UserMapper;
 import com.kajasa.auth.repository.UserRepository;
 import com.kajasa.auth.service.UserService;
 import java.util.Locale;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,4 +65,41 @@ public class UserServiceImpl implements UserService {
 
         return response;
     }
+
+    @Override
+    public UserResponseDto getUserById(UUID userId) {
+
+        log.info("Fetching user by ID: {}", userId);
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("User not found by ID: {}", userId);
+                    return new ResourceNotFoundException(
+                            "No fue posible encontrar el registro solicitado."
+                    );
+                });
+
+        log.debug("User found with ID: {}", userId);
+
+        return userMapper.toResponse(user);
+    }
+
+    @Override
+    public UserResponseDto getUserByEmail(String email) {
+
+        log.info("Fetching user by email: {}", email);
+
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> {
+                    log.warn("User not found by email: {}", email);
+                    return new ResourceNotFoundException(
+                            "No fue posible encontrar el registro solicitado."
+                    );
+                });
+
+        log.debug("User found with email: {}", email);
+
+        return userMapper.toResponse(user);
+    }
+
 }
