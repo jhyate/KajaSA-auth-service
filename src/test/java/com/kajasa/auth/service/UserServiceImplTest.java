@@ -92,7 +92,7 @@ public class UserServiceImplTest {
         when(userMapper.toResponse(savedUser))
                 .thenReturn(expectedResponse);
 
-        // Act: ejecutar el método que estamos probando
+        // Act: ejecutar el méhod que estamos probando
         UserResponseDto response = userService.registerUser(request);
 
         // Assert: validar el resultado
@@ -157,7 +157,7 @@ public class UserServiceImplTest {
         when(userMapper.toResponse(userEntity))
                 .thenReturn(expectedResponse);
 
-        // Act: ejecutar el método
+        // Act: ejecutar el method
         UserResponseDto response = userService.getUserById(userId);
 
         // Assert: comprobar el resultado
