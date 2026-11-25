@@ -2,6 +2,7 @@ package com.kajasa.auth.service;
 
 import com.kajasa.auth.dto.UserCreateRequestDto;
 import com.kajasa.auth.dto.UserResponseDto;
+import com.kajasa.auth.enums.UserStatus;
 import java.util.UUID;
 
 /**
@@ -16,5 +17,7 @@ public interface UserService {
     UserResponseDto getUserById(UUID userId);
 
     UserResponseDto getUserByEmail(String email);
+
+    UserResponseDto updateStatusByUserId(UUID userId, UserStatus status);
 
 }

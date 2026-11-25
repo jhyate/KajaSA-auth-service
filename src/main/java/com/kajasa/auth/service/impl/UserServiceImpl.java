@@ -71,13 +71,7 @@ public class UserServiceImpl implements UserService {
 
         log.info("Fetching user by ID: {}", userId);
 
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> {
-                    log.warn("User not found by ID: {}", userId);
-                    return new ResourceNotFoundException(
-                            "No fue posible encontrar el registro solicitado."
-                    );
-                });
+        UserEntity user = getUserEntityById(userId);
 
         log.debug("User found with ID: {}", userId);
 
@@ -102,4 +96,53 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponse(user);
     }
 
+    @Transactional
+    @Override
+    public UserResponseDto updateStatusByUserId(UUID userId, UserStatus status) {
+
+        log.info("Updating status for user ID: {} to {}", userId, status);
+
+        UserEntity user = getUserEntityById(userId);
+
+        if (!isValidStatusTransition(user.getStatus(), status)) {
+            log.warn("User status transition rejected");
+            throw new ConflictException(
+                    "No es posible realizar la transición al estado solicitado."
+            );
+        }
+
+        user.setStatus(status);
+
+        return userMapper.toResponse(user);
+    }
+
+    private boolean isValidStatusTransition(
+            UserStatus currentStatus,
+            UserStatus newStatus) {
+
+        log.debug("Validating status transition from {} to {}",
+                currentStatus, newStatus);
+
+        switch (currentStatus) {
+            case ACTIVE:
+                return newStatus == UserStatus.BLOCKED
+                        || newStatus == UserStatus.DISABLED;
+
+            case BLOCKED:
+                return newStatus == UserStatus.ACTIVE
+                        || newStatus == UserStatus.DISABLED;
+
+            case DISABLED:
+            default:
+                log.warn("Status transition is not allowed from {}", currentStatus);
+                return false;
+        }
+    }
+
+    private UserEntity getUserEntityById(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No fue posible encontrar el registro solicitado."
+                ));
+    }
 }
