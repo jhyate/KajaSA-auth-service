@@ -12,6 +12,10 @@ spring:
 application:
   version: "@project.version@"
 
+  api:
+    auth:
+      main-url: /api/v1/auth
+
 kajasa:
   security:
     password:
