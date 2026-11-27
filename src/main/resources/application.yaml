@@ -26,3 +26,8 @@ kajasa:
         parallelism: 1
         salt-length: 16
         hash-length: 32
+
+    email-code:
+      length: 6
+      expiration-minutes: 10
+      max-attempts: 3

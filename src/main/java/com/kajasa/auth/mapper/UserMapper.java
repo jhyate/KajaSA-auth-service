@@ -6,13 +6,21 @@ import com.kajasa.auth.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+/**
+ * Mapper encargado de convertir entre las entidades de usuario
+ * y sus respectivos objetos de transferencia de datos (DTO).
+ * <p>
+ * Utiliza MapStruct para automatizar las conversiones y mantener
+ * desacoplada la representación interna de los datos de usuario
+ * de los objetos utilizados en las interfaces de la aplicación.
+ */
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
     /**
      * Convierte una solicitud de creación de usuario
      * en una entidad de usuario.
-     *
+     * <p>
      * La contraseña no se mapea porque debe convertirse
      * previamente mediante PasswordEncoder.
      *

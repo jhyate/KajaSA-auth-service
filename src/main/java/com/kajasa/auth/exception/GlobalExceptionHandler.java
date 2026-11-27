@@ -42,12 +42,50 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(response);
     }
 
+    /**
+     * Maneja las excepciones de recursos no encontrados.
+     * <p>
+     * Construye una respuesta HTTP 404 con información sobre el error
+     * y la ruta en la que se produjo.
+     *
+     * @param exception excepción que representa el recurso no encontrado.
+     * @param request   solicitud HTTP que originó la excepción.
+     * @return respuesta HTTP 404 con los detalles del error.
+     */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleResourceNotFound(
             ResourceNotFoundException exception,
             HttpServletRequest request) {
 
         HttpStatus status = HttpStatus.NOT_FOUND;
+
+        ErrorResponseDto response = new ErrorResponseDto(
+                Instant.now(),
+                status.value(),
+                status.name(),
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(status).body(response);
+    }
+
+    /**
+     * Maneja las excepciones relacionadas con errores internos del servidor.
+     * <p>
+     * Construye una respuesta HTTP 500 utilizando un mensaje genérico
+     * para evitar exponer detalles técnicos de la aplicación.
+     *
+     * @param exception excepción que representa el error interno.
+     * @param request   solicitud HTTP que originó la excepción.
+     * @return respuesta HTTP 500 con la información general del error.
+     */
+    @ExceptionHandler(InternalServerException.class)
+    public ResponseEntity<ErrorResponseDto> handleInternalServer(
+            InternalServerException exception,
+            HttpServletRequest request) {
+
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
         ErrorResponseDto response = new ErrorResponseDto(
                 Instant.now(),

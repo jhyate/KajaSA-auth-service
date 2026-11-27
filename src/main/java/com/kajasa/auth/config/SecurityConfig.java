@@ -6,8 +6,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Configuración de los componentes de seguridad de la aplicación.
+ * <p>
+ * Define los beans y componentes necesarios para implementar
+ * los mecanismos de seguridad utilizados por KajaSA Auth Service.
+ */
 @Configuration
-@EnableConfigurationProperties(Argon2Properties.class)
+@EnableConfigurationProperties({
+        Argon2Properties.class,
+        EmailCodeProperties.class,
+        HmacProperties.class
+})
 public class SecurityConfig {
 
     @Bean
